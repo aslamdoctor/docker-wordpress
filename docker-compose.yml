@@ -1,0 +1,88 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: wp_db
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: wordpress
+    volumes:
+      - database:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    networks:
+      - app-network
+
+  wordpress:
+    build: 
+      context: ./.docker/wordpress
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    image: wordpress/myproj
+    container_name: wordpress
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_TABLE_PREFIX: my_wp_
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'FS_METHOD', 'direct' );
+    volumes:
+      - ./wordpress:/var/www/html
+      - ./.docker/wordpress/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini
+    networks:
+      - app-network
+
+  webserver:
+    build: 
+      context: ./.docker/nginx
+      dockerfile: Dockerfile
+    depends_on:
+      - wordpress
+      - phpmyadmin
+    image: nginx/ssl
+    container_name: webserver
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "${WP_PORT:-443}:443"
+      - "${MYADMIN_PORT:-8080}:8080"
+    volumes:
+      - ./wordpress:/var/www/html/wordpress
+      - phpmyadmin:/var/www/html/phpmyadmin
+      - ./nginx-conf:/etc/nginx/conf.d
+    networks:
+      app-network:
+        aliases:
+          - localhost
+
+  phpmyadmin:
+    depends_on:
+      - db
+    image: phpmyadmin/phpmyadmin:fpm-alpine
+    container_name: phpmyadmin
+    restart: always
+    env_file: .env
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - phpmyadmin:/var/www/html
+    networks:
+      - app-network
+
+volumes:
+  phpmyadmin:
+    driver: local
+  database:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
