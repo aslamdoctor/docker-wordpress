@@ -1,5 +1,12 @@
 version: '3.3'
 
+networks:
+  # enable connection with Traefik
+  traefik:
+    external: true
+  # network for the app
+  backend:
+
 services:
   db:
     image: mysql:5.7
@@ -11,6 +18,8 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - backend
 
   phpmyadmin:
     depends_on:
@@ -26,13 +35,17 @@ services:
     restart: always
     ports:
       - ${PMA_PORT}:80
+    networks:
+      - backend
 
   wordpress:
     depends_on:
       - db
     image: wordpress:6.0.1-php7.4-apache
-    ports:
-      - '${WP_PORT}:80'
+    # ports:
+    #   - '${WP_PORT}:80'
+    expose:
+      - ${WP_PORT}
     volumes:
       - './wordpress:/var/www/html'
       - './config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini'
@@ -42,6 +55,16 @@ services:
       WORDPRESS_DB_USER: ${MYSQL_DATABASE}
       WORDPRESS_DB_PASSWORD: ${MYSQL_USER}
       WORDPRESS_DB_NAME: ${MYSQL_PASSWORD}
+    networks:
+      - traefik
+      - backend
+    labels:
+      # The labels are usefull for Traefik only
+      - 'traefik.enable=true'
+      - 'traefik.docker.network=traefik'
+      # Get the routes from http
+      - 'traefik.http.routers.$TRAEFIK_ROUTE.rule=Host(`${SITE_URL}`)'
+      - 'traefik.http.routers.$TRAEFIK_ROUTE.entrypoints=web'
 
   wp-cli:
     image: wordpress:cli-2.6.0-php7.4
@@ -56,5 +79,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - './wordpress:/var/www/html'
+    networks:
+      - backend
 volumes:
   db_data: {}

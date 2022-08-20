@@ -1,0 +1,35 @@
+version: '3.3'
+
+networks:
+  # Allow the use of traefik in other docker-compose.yml files
+  traefik:
+    external: true
+services:
+  traefik:
+    # The official v2 Traefik docker image
+    image: traefik:v2.8
+    container_name: 'traefik'
+    logging:
+      options:
+        max-size: '10m'
+        max-file: '3'
+    command:
+      # Only for development environment
+      - '--log.level=DEBUG'
+      - '--api.insecure=true'
+      # Get Docker as the provider
+      - '--providers.docker=true'
+      # Avoid that all containers are exposed
+      - '--providers.docker.exposedbydefault=false'
+      # Settle the ports for the entry points
+      - '--entrypoints.web.address=:80'
+      - '--entrypoints.web-secure.address=:443'
+    ports:
+      - '80:80'
+      - '443:443'
+      - '8080:8080'
+    networks:
+      - 'traefik'
+    volumes:
+      # Connect to Doker socket
+      - '/var/run/docker.sock:/var/run/docker.sock:ro'

@@ -6,10 +6,27 @@
 - Update `.env` file for project credentials
 - Run `docker compose up -d`
 - Deleted files in your `wordpress` directory and replace with your project if required. Do not replace `wp-config.php` file.
-- Run `http://localhost:80/` for frontend
+- Add entry to `hosts` file
+
+```
+127.0.0.1 mywebsite.local
+::1 mywebsite.local
+```
+
+- Run `http://mywebsite.local/` for frontend
 - Follow instructions on screen for installation process
 - Run WP-CLI commands like this `docker-compose run --rm wp-cli --info`
-- Run `http://localhost:6060/` for phpMyAdmin
+- Run `http://mywebsite.local:6060/` for phpMyAdmin
+
+## Setup Traefik for reverse proxy
+
+- Create network if not exists
+  `docker network create traefik`
+- Run Traefik
+  ```
+  cd traefik
+  docker compose up -d
+  ```
 
 ## Some important commands
 
