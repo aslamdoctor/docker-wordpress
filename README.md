@@ -34,11 +34,17 @@
 
   `docker-compose run --rm wp-cli search-replace 'http://mywebsite.local' 'http://mywebsite.local:8000'`
 
-- To backup database from Docker container
+- Backup/Restore Database using WP CLI
+
+  `docker-compose run --rm wp-cli wp db export - > database.sql`
+
+  `docker-compose run --rm wp-cli wp db import - < database.sql`
+
+- To backup database from Docker mysql container
 
   `docker exec CONTAINER_ID mysqldump -u wordpress -pwordpress wordpress --no-tablespaces > ./database.sql`
 
-- To restored database to Docker container
+- To restored database to Docker mysql container
 
   `docker exec CONTAINER_ID mysql -u wordpress -pwordpress -e "CREATE DATABASE IF NOT EXISTS wordpress"`
 
