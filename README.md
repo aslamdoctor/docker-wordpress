@@ -67,3 +67,7 @@
 ## Notes
 
 For best performance on Windows, run your source directory from WSL2 (Win Pro license might be required).
+
+## Related Article
+
+[Click here to read the related article](https://www.aslamdoctor.com/docker-wordpress-web-development-stack/)
