@@ -54,6 +54,9 @@
 
   `docker exec -ti CONTAINER_ID sh`
 
+- Install essential plugins
+  `wp plugin install regenerate-thumbnails --activate svg-support --activate duplicate-post --activate contact-form-7 --activate`
+
 ## Apply proper file/folder permissions to modify the WordPress files
 
 1. Create docker group if not exists. First check if `docker` group exists by typing command `groups`
