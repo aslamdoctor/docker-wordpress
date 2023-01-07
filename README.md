@@ -55,7 +55,7 @@
   `docker exec -ti CONTAINER_ID sh`
 
 - Install essential plugins
-  `wp plugin install regenerate-thumbnails --activate svg-support --activate duplicate-post --activate contact-form-7 --activate`
+  `docker-compose run --rm wp-cli wp plugin install regenerate-thumbnails --activate svg-support --activate duplicate-post --activate contact-form-7 --activate`
 
 ## Apply proper file/folder permissions to modify the WordPress files
 
