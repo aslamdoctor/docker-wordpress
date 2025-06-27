@@ -5,7 +5,7 @@
 - Clone the repo `git@github.com:aslamdoctor/docker-wordpress.git`
 - Update `.env` file for project credentials
 - Run `docker compose up -d`
-- Deleted files in your `wordpress` directory and replace with your project if required. Do not replace `wp-config.php` file.
+- Delete files in your `wordpress` directory and replace with your project if required. Do not replace `wp-config.php` file.
 - Add entry to `hosts` file
 
 ```
@@ -32,13 +32,13 @@
 
 - To Search-Replace URL in database
 
-  `docker-compose run --rm wp-cli search-replace 'http://mywebsite.local' 'http://mywebsite.local:8000'`
+  `docker compose run --rm wp-cli search-replace 'http://mywebsite.local' 'http://mywebsite.local:8000'`
 
 - Backup/Restore Database using WP CLI
 
-  `docker-compose run --rm wp-cli wp db export - > database.sql`
+  `docker compose run --rm wp-cli wp db export - > database.sql`
 
-  `docker-compose run --rm wp-cli wp db import - < database.sql`
+  `docker compose run --rm wp-cli wp db import - < database.sql`
 
 - To backup database from Docker mysql container
 

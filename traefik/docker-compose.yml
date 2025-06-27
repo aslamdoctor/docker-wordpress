@@ -6,8 +6,8 @@ networks:
     external: true
 services:
   traefik:
-    # The official v2 Traefik docker image
-    image: traefik:v2.8
+    # The official Traefik docker image
+    image: traefik:latest
     container_name: 'traefik'
     logging:
       options:
