@@ -1,5 +1,3 @@
-version: '3.3'
-
 networks:
   # enable connection with Traefik
   traefik:
@@ -25,7 +23,6 @@ services:
     depends_on:
       - db
     image: adminer:latest
-    container_name: ${ADMINER_CONTAINER_NAME}
     restart: always
     ports:
       - ${ADMINER_PORT}:8080
@@ -47,9 +44,9 @@ services:
     restart: always
     environment:
       WORDPRESS_DB_HOST: db:${DB_PORT}
-      WORDPRESS_DB_USER: ${MYSQL_DATABASE}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_USER}
-      WORDPRESS_DB_NAME: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
     networks:
       - traefik
       - backend
@@ -68,9 +65,9 @@ services:
       - db
     environment:
       WORDPRESS_DB_HOST: db:${DB_PORT}
-      WORDPRESS_DB_USER: ${MYSQL_DATABASE}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_USER}
-      WORDPRESS_DB_NAME: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
     working_dir: /var/www/html
     volumes:
       - './wordpress:/var/www/html'

@@ -1,5 +1,3 @@
-version: '3.3'
-
 networks:
   # Allow the use of traefik in other docker-compose.yml files
   traefik:
