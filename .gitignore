@@ -1,7 +1,1 @@
-#Wordpress files
-wordpress/*
 .DS_store
-
-# Exclude
-!wordpress/wp-config.php
-!wordpress/wp-content
